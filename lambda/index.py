@@ -1,22 +1,41 @@
 import json
 import os
-import re  # 正規表現モジュールをインポート
-import urllib.request  # urllibをインポート
+import re
+import urllib.request
 import urllib.error
 
-def lambda_handler(event, context):
+def my_model_handler(event, context):
     try:
         print("Received event:", json.dumps(event))
         
         # リクエストボディの解析
         body = json.loads(event['body'])
-        message = body['message']
-        
+        message = body['message']        
         print("Processing message:", message)
+
+        # 会話履歴を使用
+        conversation_history = body.get('conversationHistory', [])
+        messages = conversation_history.copy()
+
+        # ユーザーメッセージを履歴に追加
+        messages.append({
+            "role": "user",
+            "content": message
+        })
+
+        prompt_parts = []
+        for msg in messages:
+            if msg["role"] == "user":
+                prompt_parts.append(f"User: {msg['content']}")
+            elif msg["role"] == "assistant":
+                prompt_parts.append(f"Assistant: {msg['content']}")
+        
+        # 全履歴をまとめたプロンプトにする
+        prompt = "\n".join(prompt_parts)
         
         # リクエストペイロードを構築
         request_payload = {
-            "prompt": message,
+            "prompt": prompt,
             "max_new_tokens": 512,
             "do_sample": True,
             "temperature": 0.7,
@@ -49,6 +68,12 @@ def lambda_handler(event, context):
         # アシスタントの応答を取得
         assistant_response = response_body['generated_text']
         
+        # アシスタントの応答も履歴に追加
+        messages.append({
+            "role": "assistant",
+            "content": assistant_response
+        })
+        
         # 成功レスポンスの返却
         return {
             "statusCode": 200,
@@ -60,7 +85,8 @@ def lambda_handler(event, context):
             },
             "body": json.dumps({
                 "success": True,
-                "response": assistant_response
+                "response": assistant_response,
+                "conversationHistory": messages
             })
         }
         
