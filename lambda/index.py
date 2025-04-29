@@ -1,8 +1,6 @@
 import json
 import os
-import boto3
 import re  # 正規表現モジュールをインポート
-from botocore.exceptions import ClientError
 import urllib.request  # urllibをインポート
 import urllib.error
 
@@ -63,7 +61,7 @@ def lambda_handler(event, context):
             raise Exception("No response content from the external API")
         
         # アシスタントの応答を取得
-        assistant_response = response_body['response']
+        assistant_response = response_body['generated_text']
         
         # 成功レスポンスの返却
         return {
