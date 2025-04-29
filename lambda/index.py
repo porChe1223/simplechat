@@ -32,7 +32,7 @@ def lambda_handler(event, context):
         }
         
         # エンドポイントURL
-        endpoint_url = "https://1c54-34-16-141-186.ngrok-free.app/generate"
+        endpoint_url = "https://5c73-34-125-181-123.ngrok-free.app/generate"
         
         # リクエストを送信
         try:
