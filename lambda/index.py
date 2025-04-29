@@ -4,14 +4,6 @@ import re  # 正規表現モジュールをインポート
 import urllib.request  # urllibをインポート
 import urllib.error
 
-# Lambda コンテキストからリージョンを抽出する関数
-def extract_region_from_arn(arn):
-    # ARN 形式: arn:aws:lambda:region:account-id:function:function-name
-    match = re.search('arn:aws:lambda:([^:]+):', arn)
-    if match:
-        return match.group(1)
-    return "us-east-1"  # デフォルト値
-
 def lambda_handler(event, context):
     try:
         print("Received event:", json.dumps(event))
