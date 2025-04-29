@@ -7,6 +7,21 @@ import urllib.error
 def my_model_handler(event, context):
     try:
         print("Received event:", json.dumps(event))
+
+        if event.get('httpMethod') == 'OPTIONS':
+            return {
+                "statusCode": 200,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST"
+                },
+                "body": json.dumps({
+                    "success": True,
+                    "message": "CORS preflight response"
+                })
+            }
         
         # リクエストボディの解析
         body = json.loads(event['body'])
