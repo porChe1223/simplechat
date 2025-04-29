@@ -12,12 +12,6 @@ def extract_region_from_arn(arn):
         return match.group(1)
     return "us-east-1"  # デフォルト値
 
-# グローバル変数としてクライアントを初期化（初期値）
-bedrock_client = None
-
-# モデルID
-MODEL_ID = os.environ.get("MODEL_ID", "us.amazon.nova-lite-v1:0")
-
 def lambda_handler(event, context):
     try:
         print("Received event:", json.dumps(event))
@@ -38,7 +32,7 @@ def lambda_handler(event, context):
         }
         
         # エンドポイントURL
-        endpoint_url = "https://1c54-34-16-141-186.ngrok-free.app/"
+        endpoint_url = "https://1c54-34-16-141-186.ngrok-free.app/generate"
         
         # リクエストを送信
         try:
@@ -57,7 +51,7 @@ def lambda_handler(event, context):
             raise Exception(f"URLError: {e.reason}")
         
         # 応答の検証
-        if not response_body.get('response'):
+        if not response_body.get('generated_text'):
             raise Exception("No response content from the external API")
         
         # アシスタントの応答を取得
