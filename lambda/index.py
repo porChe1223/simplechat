@@ -8,6 +8,18 @@ API_URL = os.environ.get("API_URL", "https://ef59-35-231-117-249.ngrok-free.app"
 def my_model_handler(event, context):
     try:
         print("Received event:", json.dumps(event))
+
+        if event.get("httpMethod") == "OPTIONS":
+            return {
+                "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST",
+                    "Content-Type": "application/json"
+                },
+                "body": json.dumps({"message": "CORS preflight success"})
+            }
         
         # リクエストボディの解析
         body = json.loads(event['body'])
