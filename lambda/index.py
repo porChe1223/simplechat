@@ -58,7 +58,7 @@ def my_model_handler(event, context):
         }
         
         # エンドポイントURL
-        endpoint_url = "https://f013-34-141-225-119.ngrok-free.app/generate"
+        endpoint_url = "https://ef59-35-231-117-249.ngrok-free.app/generate"
         
         # リクエストを送信
         try:
